@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{ height: 100vh; }
+            .chat-area{ background-color: #fff; height: 90vh; }
+            .msg{ background-color: #eee; height: 30px; font-size: 20px;margin: 3px; }
+            .input-msg{ height: 6vh; width: 90%; }
+            .inputBtn{ height: 7vh; width: 8%; }
+        </style>
+    </head>
+    <body>
+        <div class="chat-area">
+        </div>
+        <div class="input-area">
+            <input class="input-msg">
+            <button class="inputBtn">Send</button>
+        </div>
+    </body>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        var socket = io('http://localhost:8000');
+
+        document.querySelector('.inputBtn').addEventListener('click',getMsg);
+
+        function getMsg(){
+            var msg = document.querySelector('.input-msg').value;
+            socMsg(msg);
+        }
+
+        function showMsg(msg){
+
+            var html = '<div class="chat">%msg%</div>';
+            html = html.replace('%msg%',msg);
+            document.querySelector('.chat-area').insertAdjacentHTML('beforeend',html);
+
+        }
+
+        function socMsg(msg){
+            console.log(msg)
+            socket.emit('chat',msg);
+        }
+
+        socket.on('message',(data)=>{
+            showMsg(data);
+        })
+        
+    </script> 
+</html>
